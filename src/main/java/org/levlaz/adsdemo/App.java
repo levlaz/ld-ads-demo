@@ -6,8 +6,9 @@ import java.util.concurrent.TimeUnit;
 import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.EventSource;
 
-import io.github.cdimascio.dotenv.Dotenv;
+import org.flywaydb.core.Flyway;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import okhttp3.Headers;
 
 /**
@@ -19,7 +20,15 @@ public class App
     public static void main( String[] args ) throws InterruptedException
     {
         Dotenv dotenv = Dotenv.configure().load();
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(dotenv.get("FLYWAY_URL"), null, null);
 
+        try {
+            flyway.migrate();
+        } catch (Exception e) {
+            System.out.println("Unable to run Migration");
+        }
+        
         EventHandler eventHandler = new SimpleEventHandler();
         String url = String.format("https://firehose.launchdarkly.com");
         Headers headers = new Headers.Builder()
