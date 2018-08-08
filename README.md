@@ -13,6 +13,10 @@ get events for.
 
 We use a Makefile to make it easier to build and run this project. 
 
+### Writing Events to PostgreSQL 
+
+If you want to write events to PostgreSQL, set the `FLYWAY_URL` environment variable to point to your PostgreSQL database. Once the app starts up it will apply any pending migrations and begin to write events to the database. 
+
 ### Building 
 
 You can run `make build` to build this project for the first time. 
