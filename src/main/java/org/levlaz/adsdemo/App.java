@@ -7,6 +7,8 @@ import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.EventSource;
 
 import org.flywaydb.core.Flyway;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import okhttp3.Headers;
@@ -17,16 +19,24 @@ import okhttp3.Headers;
  */
 public class App 
 {
+    private static final Logger logger =
+        LoggerFactory.getLogger(App.class.getName());
+
     public static void main( String[] args ) throws InterruptedException
     {
         Dotenv dotenv = Dotenv.configure().load();
-        Flyway flyway = new Flyway();
-        flyway.setDataSource(dotenv.get("FLYWAY_URL"), null, null);
 
-        try {
-            flyway.migrate();
-        } catch (Exception e) {
-            System.out.println("Unable to run Migration");
+        if (dotenv.get("FLYWAY_URL") == null ) {
+            logger.info("FLYWAY_URL not set, not running migrations");
+        } else {
+            Flyway flyway = new Flyway();
+            flyway.setDataSource(dotenv.get("FLYWAY_URL"), null, null);
+            
+            try {
+                flyway.migrate();
+            } catch (Exception e) {
+                System.out.println("Unable to run Migration");
+            }
         }
         
         EventHandler eventHandler = new SimpleEventHandler();
