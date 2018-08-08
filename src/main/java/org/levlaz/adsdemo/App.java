@@ -21,17 +21,17 @@ public class App
 {
     private static final Logger logger =
         LoggerFactory.getLogger(App.class.getName());
+    private static final Dotenv dotenv = Dotenv.configure().load();
 
     public static void main( String[] args ) throws InterruptedException
     {
-        Dotenv dotenv = Dotenv.configure().load();
 
         if (dotenv.get("FLYWAY_URL") == null ) {
             logger.info("FLYWAY_URL not set, not running migrations");
         } else {
             Flyway flyway = new Flyway();
             flyway.setDataSource(dotenv.get("FLYWAY_URL"), null, null);
-            
+
             try {
                 flyway.migrate();
             } catch (Exception e) {
