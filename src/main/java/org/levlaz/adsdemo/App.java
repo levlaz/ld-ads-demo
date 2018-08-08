@@ -32,7 +32,6 @@ public class App
             logger.warn("FLYWAY_URL not set, not running migrations");
         } else {
             Flyway flyway = new Flyway();
-            logger.info("FLYWAY: " + dotenv.get("FLYWAY_URL").length());
             flyway.setDataSource(dotenv.get("FLYWAY_URL"), null, null);
 
             try {
