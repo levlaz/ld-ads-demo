@@ -1,4 +1,4 @@
-package org.levlaz;
+package org.levlaz.adsdemo;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -1,4 +1,4 @@
-package org.levlaz;
+package org.levlaz.adsdemo;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
@@ -6,21 +6,24 @@ import java.util.concurrent.TimeUnit;
 import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.EventSource;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import okhttp3.Headers;
 
 /**
- * Hello world!
+ * LaunchDarkly ADS Consumer Reference Implementation
  *
  */
 public class App 
 {
     public static void main( String[] args ) throws InterruptedException
     {
-        System.out.println( "Hello World!" );
+        Dotenv dotenv = Dotenv.configure().load();
+
         EventHandler eventHandler = new SimpleEventHandler();
         String url = String.format("https://firehose.launchdarkly.com");
         Headers headers = new Headers.Builder()
-            .add("Authorization", System.getenv("LD_SDK_KEY"))
+            .add("Authorization", dotenv.get("LD_SDK_KEY"))
             .add("Accept", "text/event-stream")
             .build();
 

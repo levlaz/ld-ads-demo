@@ -1,4 +1,4 @@
-package org.levlaz;
+package org.levlaz.adsdemo;
 
 import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.MessageEvent;
