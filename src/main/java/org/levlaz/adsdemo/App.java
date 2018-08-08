@@ -27,7 +27,7 @@ public class App
     {
 
         if (dotenv.get("FLYWAY_URL") == null ) {
-            logger.info("FLYWAY_URL not set, not running migrations");
+            logger.warn("FLYWAY_URL not set, not running migrations");
         } else {
             Flyway flyway = new Flyway();
             flyway.setDataSource(dotenv.get("FLYWAY_URL"), null, null);
