@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import okhttp3.Headers;
+import org.levlaz.adsdemo.connectors.Console;
 
 /**
  * LaunchDarkly ADS Consumer Reference Implementation
@@ -41,7 +42,7 @@ public class App
             }
         }
         
-        EventHandler eventHandler = new SimpleEventHandler();
+        EventHandler eventHandler = new Console();
         String url = String.format("https://firehose.launchdarkly.com");
         Headers headers = new Headers.Builder()
             .add("Authorization", dotenv.get("LD_SDK_KEY"))
