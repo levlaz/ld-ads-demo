@@ -35,7 +35,7 @@ public class App
             try {
                 flyway.migrate();
             } catch (Exception e) {
-                System.out.println("Unable to run Migration");
+                logger.error("Unable to run Migration: " + e);
             }
         }
         
