@@ -1,6 +1,7 @@
 package org.levlaz.adsdemo;
 
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
 import com.launchdarkly.eventsource.EventHandler;
@@ -8,6 +9,7 @@ import com.launchdarkly.eventsource.EventSource;
 
 import org.flywaydb.core.Flyway;
 import org.levlaz.adsdemo.connectors.Console;
+import org.levlaz.adsdemo.connectors.Postgres;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +54,14 @@ public class App implements Runnable {
             case "console":
                 logger.info("Starting ADS consumer with console connector.");
                 eventHandler = new Console();
+                break;
+            case "postgres":
+                logger.info("Starting ADS consumer with postgres connector.");
+                try {
+                    eventHandler = new Postgres(dotenv.get("FLYWAY_URL"));
+                } catch (SQLException e) {
+                    logger.error(e.getMessage());
+                }
                 break;
             case "default":
                 logger.info("Starting ADS consumer with default connector.");
