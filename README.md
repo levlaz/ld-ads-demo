@@ -15,7 +15,7 @@ We use a Makefile to make it easier to build and run this project.
 
 ### Writing Events to PostgreSQL 
 
-If you want to write events to PostgreSQL, set the `FLYWAY_URL` environment variable to point to your PostgreSQL database. Once the app starts up it will apply any pending migrations and begin to write events to the database. 
+If you want to write events to PostgreSQL, set the `FLYWAY_URL` environment variable to point to your PostgreSQL database and use the `postgres` connector option when you run the application. Once the app starts up it will apply any pending migrations and begin to write events to the database. 
 
 ### Building 
 
@@ -25,6 +25,7 @@ You can run `mvn compile assembly:single` to build this project for the first ti
 
 You can run `java -jar target/ld-ads-demo-1.0-SNAPSHOT-jar-with-dependencies.jar` to run the project with the default connector. 
 
+### Connectors
 If you want to use a different connector you can pass the name of the connector
 as a string argument. 
 
@@ -32,12 +33,7 @@ as a string argument.
 
 The supported connectors right now are: 
 
-* console - pretty print to console
+* `console` - pretty print to console
+* `postgres` - write summary and index events to postgresql 
 
 You will now see events coming through the system in your console. 
-
-## Future Improvements [WIP]
-
-The goal of this project is to show how to consume the stream and send it 
-along to various destinations. Some reference destinations will be included 
-in the future. 
