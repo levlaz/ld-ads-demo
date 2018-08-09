@@ -19,11 +19,20 @@ If you want to write events to PostgreSQL, set the `FLYWAY_URL` environment vari
 
 ### Building 
 
-You can run `make build` to build this project for the first time. 
+You can run `mvn compile assembly:single` to build this project for the first time. 
 
 ### Running 
 
-You can run `make run` to run the project. 
+You can run `java -jar target/ld-ads-demo-1.0-SNAPSHOT-jar-with-dependencies.jar` to run the project with the default connector. 
+
+If you want to use a different connector you can pass the name of the connector
+as a string argument. 
+
+`java -jar target/ld-ads-demo-1.0-SNAPSHOT-jar-with-dependencies.jar -c $CONNECTOR`
+
+The supported connectors right now are: 
+
+* console - pretty print to console
 
 You will now see events coming through the system in your console. 
 
