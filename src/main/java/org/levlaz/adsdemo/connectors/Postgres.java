@@ -53,7 +53,7 @@ public class Postgres extends SimpleEventHandler {
         try { 
             Connection conn = connect();
             PreparedStatement query = conn.prepareStatement(SQL); 
-            
+
             query.setInt(1, event.get("creationDate").getAsInt());
             query.setString(2, event.get("user").getAsJsonObject().get("key").toString());
             query.setString(3, event.get("user").getAsJsonObject().get("custom").toString());
@@ -84,7 +84,7 @@ public class Postgres extends SimpleEventHandler {
                     insertUserIndexEvent(jo);
                     break;
                 default:
-                    logger.warn("Unkown kind, doing nothing: " + kind);
+                    logger.warn("Unknown kind, doing nothing: " + kind);
                     break;
             }
         }
