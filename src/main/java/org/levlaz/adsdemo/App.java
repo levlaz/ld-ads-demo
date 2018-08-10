@@ -34,6 +34,7 @@ public class App implements Runnable {
     public void run() {
         EventHandler eventHandler = null;
         Dotenv dotenv = Dotenv.configure()
+            .directory("./")
             .ignoreIfMissing()
             .load();
 
