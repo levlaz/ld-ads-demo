@@ -2,8 +2,13 @@ package org.levlaz.adsdemo;
 
 import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.MessageEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SimpleEventHandler implements EventHandler {
+
+    private static final Logger logger =
+        LoggerFactory.getLogger(App.class.getName());
 
     @Override
     public void onOpen() throws Exception {
@@ -26,7 +31,7 @@ public class SimpleEventHandler implements EventHandler {
     }
 
     @Override
-    public void onError(Throwable t) {
-        System.out.println("onError: " + t);
+    public void onError(Throwable e) {
+        logger.error(e.getMessage(), e);
     }
 }

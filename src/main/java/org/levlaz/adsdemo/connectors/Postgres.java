@@ -64,6 +64,63 @@ public class Postgres extends SimpleEventHandler {
         }
     }
 
+    public void insertFeatureEvent(JsonObject event) {
+        String SQL = "INSERT INTO ld_feature(feature_key, user_key, version, variation, value, default_value, creation_date)" +
+            "VALUES(?, ?, ?, ?, ?, ?, ?)";
+
+        try {
+            Connection conn = connect();
+            PreparedStatement query = conn.prepareStatement(SQL);
+
+            query.setString(1, event.get("key").getAsString());
+            query.setString(2, event.get("userKey").getAsString());
+            query.setInt(3, event.get("version").getAsInt());
+            query.setInt(4, event.get("variation").getAsInt());
+            query.setString(5, event.get("variation").getAsString());
+            query.setString(6, event.get("default").getAsString());
+            query.setInt(7, event.get("creationDate").getAsInt());;
+
+            query.executeUpdate();
+        } catch (SQLException ex) {
+            logger.error(ex.getMessage());
+        }
+    }
+
+    public void insertIdentifyEvent(JsonObject event) {
+        String SQL = "INSERT INTO ld_identify_event(user_info, creation_date)" +
+            "VALUES(to_jsonb(?::json), ?)";
+
+        try {
+            Connection conn = connect();
+            PreparedStatement query = conn.prepareStatement(SQL);
+
+            query.setString(1, event.get("user").toString());
+            query.setInt(2, event.get("creationDate").getAsInt());
+
+            query.executeUpdate();
+        } catch (SQLException ex) {
+            logger.error(ex.getMessage());
+        }
+    }
+
+    public void insertCustomEvent(JsonObject event) {
+        String SQL = "INSERT INTO ld_custom_event(user_key, creation_date, event_key)" + 
+            "VALUES(?, ?, ?)";
+
+        try {
+            Connection conn = connect();
+            PreparedStatement query = conn.prepareStatement(SQL);
+
+            query.setString(1, event.get("userKey").toString());
+            query.setInt(2, event.get("creationDate").getAsInt());
+            query.setString(3, event.get("key").toString());
+
+            query.executeUpdate();
+        } catch (SQLException ex) {
+            logger.error(ex.getMessage(), ex);
+        }
+    }
+
     @Override
     public void onMessage(String event, MessageEvent messageEvent) throws Exception {
         String kind;
@@ -82,6 +139,18 @@ public class Postgres extends SimpleEventHandler {
                 case "index":
                     logger.info("Inserting new Index Event");
                     insertUserIndexEvent(jo);
+                    break;
+                case "feature":
+                    logger.info("Inserting new Feature Event");
+                    insertFeatureEvent(jo);
+                    break;
+                case "identify":
+                    logger.info("Inserting new Identify Event");
+                    insertIdentifyEvent(jo);
+                    break;
+                case "custom":
+                    logger.info("Inserting new Custom Event");
+                    insertCustomEvent(jo);
                     break;
                 default:
                     logger.warn("Unknown kind, doing nothing: " + kind);
