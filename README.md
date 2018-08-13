@@ -2,16 +2,19 @@
 
 Reference Implementation for LaunchDarkly Analytics Data Stream Consumer
 
-## Usage 
+## Quickstart 
 
 You must have the Analytics Data Stream enabled in your account in order to
 test this software. 
 
-1. A valid `LD_SDK_KEY` exported as an environment variable. This key should 
-map back to the specific environment of a specific project that you want to 
-get events for. 
+1. Clone this repo 
+2. `cd` into the cloned repo 
+3. Copy `.env.example` to `.env`
+4. Enter the SDK key for the environment that you want to consume events for. 
+5. Run `mvn compile assembly:single`
+6. Run `java -jar target/ld-ads-demo-1.0-SNAPSHOT-jar-with-dependencies.jar`
 
-We use a Makefile to make it easier to build and run this project. 
+You will now see events in your console as they occur. 
 
 ### Writing Events to PostgreSQL 
 
@@ -19,7 +22,7 @@ If you want to write events to PostgreSQL, set the `FLYWAY_URL` environment vari
 
 ### Building 
 
-You can run `mvn compile assembly:single` to build this project for the first time. 
+You can run `mvn compile assembly:single` to build this project. Do this initially and if you make changs to the code.
 
 ### Running 
 
@@ -35,5 +38,3 @@ The supported connectors right now are:
 
 * `console` - pretty print to console
 * `postgres` - write summary and index events to postgresql 
-
-You will now see events coming through the system in your console. 
