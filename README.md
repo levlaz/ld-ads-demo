@@ -16,6 +16,16 @@ test this software.
 
 You will now see events in your console as they occur. 
 
+## Usage 
+
+### Change Logger Level 
+
+Add an argument after `java` with the desired log level. 
+
+```
+-Dorg.slf4j.simpleLogger.defaultLogLevel=debug
+```
+
 ### Writing Events to PostgreSQL 
 
 If you want to write events to PostgreSQL, set the `FLYWAY_URL` environment variable to point to your PostgreSQL database and use the `postgres` connector option when you run the application. Once the app starts up it will apply any pending migrations and begin to write events to the database. 
@@ -38,3 +48,4 @@ The supported connectors right now are:
 
 * `console` - pretty print to console
 * `postgres` - write summary and index events to postgresql 
+

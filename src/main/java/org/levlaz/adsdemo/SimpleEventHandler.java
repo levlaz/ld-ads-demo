@@ -9,15 +9,15 @@ public class SimpleEventHandler implements EventHandler {
 
     private static final Logger logger =
         LoggerFactory.getLogger(App.class.getName());
-
+    
     @Override
     public void onOpen() throws Exception {
-        System.out.println("Established Connection with the LaunchDarkly Analytics Data Stream");
+        logger.info("Established Connection with the LaunchDarkly Analytics Data Stream");
     }
 
     @Override
     public void onClosed() throws Exception {
-        System.out.println("onClosed");
+        logger.info("onClosed");
     }
 
     @Override
@@ -27,7 +27,7 @@ public class SimpleEventHandler implements EventHandler {
 
     @Override
     public void onComment(String comment) throws Exception {
-        System.out.println("onComment");
+        logger.info("onComment");
     }
 
     @Override

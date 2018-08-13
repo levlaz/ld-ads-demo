@@ -2,7 +2,6 @@ package org.levlaz.adsdemo;
 
 import java.net.URI;
 import java.sql.SQLException;
-import java.util.concurrent.TimeUnit;
 
 import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.EventSource;
@@ -82,18 +81,21 @@ public class App implements Runnable {
         EventSource.Builder builder = new EventSource.Builder(eventHandler, URI.create(url))
             .headers(headers);
 
-        try (EventSource eventSource = builder.build()) {
+        try {
+            EventSource eventSource = builder.build();
             eventSource.setReconnectionTimeMs(3000);
             eventSource.start();
-
-            TimeUnit.MINUTES.sleep(10);
         } catch (Exception e) {
             logger.error("Error: " + e);
         }
     }
 
-    public static void main( String[] args )
+    public static void main( String[] args ) throws InterruptedException
     {
         CommandLine.run(new App(), System.out, args);
+
+        while (true) {
+            Thread.sleep(1000);
+        }
     }
 }

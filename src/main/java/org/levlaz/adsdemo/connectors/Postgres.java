@@ -28,97 +28,87 @@ public class Postgres extends SimpleEventHandler {
         return DriverManager.getConnection(url);
     }
 
-    public void insertSummaryEvent(JsonObject event) {
+    public void insertSummaryEvent(JsonObject event) throws SQLException{
         String SQL = "INSERT INTO ld_summary_event(start_date, end_date, features)" +
             "VALUES(?, ?, to_jsonb(?::json))";
 
-        try {
-            Connection conn = connect();
-            PreparedStatement query = conn.prepareStatement(SQL);
+        Connection conn = connect();
+        PreparedStatement query = conn.prepareStatement(SQL);
 
-            query.setInt(1, event.get("startDate").getAsInt());
-            query.setInt(2, event.get("endDate").getAsInt());
-            query.setString(3, event.get("features").toString());
-            
-            query.executeUpdate();
-        } catch (SQLException ex) {
-            logger.error(ex.getMessage());
-        }
+        query.setInt(1, event.get("startDate").getAsInt());
+        query.setInt(2, event.get("endDate").getAsInt());
+        query.setString(3, event.get("features").toString());
+        
+        query.executeUpdate();
+        query.close();
+        conn.close();
     }
 
-    public void insertUserIndexEvent(JsonObject event) {
+    public void insertUserIndexEvent(JsonObject event) throws SQLException{
         String SQL = "INSERT INTO ld_user_index(creation_date, user_id, custom)" + 
             "VALUES(?, ?, to_jsonb(?::json))";
 
-        try { 
-            Connection conn = connect();
-            PreparedStatement query = conn.prepareStatement(SQL); 
+        Connection conn = connect();
+        PreparedStatement query = conn.prepareStatement(SQL); 
 
-            query.setInt(1, event.get("creationDate").getAsInt());
-            query.setString(2, event.get("user").getAsJsonObject().get("key").toString());
-            query.setString(3, event.get("user").getAsJsonObject().get("custom").toString());
+        query.setInt(1, event.get("creationDate").getAsInt());
+        query.setString(2, event.get("user").getAsJsonObject().get("key").toString());
+        query.setString(3, event.get("user").getAsJsonObject().get("custom").toString());
 
-            query.executeUpdate();
-        } catch (SQLException ex) {
-            logger.error(ex.getMessage());
-        }
+        query.executeUpdate();
+        query.close();
+        conn.close();
     }
 
-    public void insertFeatureEvent(JsonObject event) {
+    public void insertFeatureEvent(JsonObject event) throws SQLException{
         String SQL = "INSERT INTO ld_feature(feature_key, user_key, version, variation, value, default_value, creation_date)" +
             "VALUES(?, ?, ?, ?, ?, ?, ?)";
 
-        try {
-            Connection conn = connect();
-            PreparedStatement query = conn.prepareStatement(SQL);
+        Connection conn = connect();
+        PreparedStatement query = conn.prepareStatement(SQL);
 
-            query.setString(1, event.get("key").getAsString());
-            query.setString(2, event.get("userKey").getAsString());
-            query.setInt(3, event.get("version").getAsInt());
-            query.setInt(4, event.get("variation").getAsInt());
-            query.setString(5, event.get("variation").getAsString());
-            query.setString(6, event.get("default").getAsString());
-            query.setInt(7, event.get("creationDate").getAsInt());;
+        query.setString(1, event.get("key").getAsString());
+        query.setString(2, event.get("userKey").getAsString());
+        query.setInt(3, event.get("version").getAsInt());
+        query.setInt(4, event.get("variation").getAsInt());
+        query.setString(5, event.get("variation").getAsString());
+        query.setString(6, event.get("default").getAsString());
+        query.setInt(7, event.get("creationDate").getAsInt());;
 
-            query.executeUpdate();
-        } catch (SQLException ex) {
-            logger.error(ex.getMessage());
-        }
+        query.executeUpdate();
+        query.close();
+        conn.close();
     }
 
-    public void insertIdentifyEvent(JsonObject event) {
+    public void insertIdentifyEvent(JsonObject event) throws SQLException{
         String SQL = "INSERT INTO ld_identify_event(user_info, creation_date)" +
             "VALUES(to_jsonb(?::json), ?)";
 
-        try {
-            Connection conn = connect();
-            PreparedStatement query = conn.prepareStatement(SQL);
+        Connection conn = connect();
+        PreparedStatement query = conn.prepareStatement(SQL);
 
-            query.setString(1, event.get("user").toString());
-            query.setInt(2, event.get("creationDate").getAsInt());
+        query.setString(1, event.get("user").toString());
+        query.setInt(2, event.get("creationDate").getAsInt());
 
-            query.executeUpdate();
-        } catch (SQLException ex) {
-            logger.error(ex.getMessage());
-        }
+        query.executeUpdate();
+        query.close();
+        conn.close();
     }
 
-    public void insertCustomEvent(JsonObject event) {
+    public void insertCustomEvent(JsonObject event) throws SQLException{
         String SQL = "INSERT INTO ld_custom_event(user_key, creation_date, event_key)" + 
             "VALUES(?, ?, ?)";
 
-        try {
-            Connection conn = connect();
-            PreparedStatement query = conn.prepareStatement(SQL);
+        Connection conn = connect();
+        PreparedStatement query = conn.prepareStatement(SQL);
 
-            query.setString(1, event.get("userKey").toString());
-            query.setInt(2, event.get("creationDate").getAsInt());
-            query.setString(3, event.get("key").toString());
+        query.setString(1, event.get("userKey").toString());
+        query.setInt(2, event.get("creationDate").getAsInt());
+        query.setString(3, event.get("key").toString());
 
-            query.executeUpdate();
-        } catch (SQLException ex) {
-            logger.error(ex.getMessage(), ex);
-        }
+        query.executeUpdate();
+        query.close();
+        conn.close();
     }
 
     @Override
