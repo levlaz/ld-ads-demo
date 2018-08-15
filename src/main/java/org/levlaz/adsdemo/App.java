@@ -3,11 +3,13 @@ package org.levlaz.adsdemo;
 import java.net.URI;
 import java.sql.SQLException;
 
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.EventSource;
 
 import org.flywaydb.core.Flyway;
 import org.levlaz.adsdemo.connectors.Console;
+import org.levlaz.adsdemo.connectors.Kinesis;
 import org.levlaz.adsdemo.connectors.Postgres;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,31 +39,38 @@ public class App implements Runnable {
             .ignoreIfMissing()
             .load();
 
-        if ((dotenv.get("FLYWAY_URL") == null ) || (dotenv.get("FLYWAY_URL").length() == 0))  {
-            logger.warn("FLYWAY_URL not set, not running migrations");
-        } else {
-            Flyway flyway = new Flyway();
-            flyway.setDataSource(dotenv.get("FLYWAY_URL"), null, null);
-
-            try {
-                flyway.migrate();
-            } catch (Exception e) {
-                logger.error("Unable to run Migration: " + e);
-            }
-        }
-
         switch (connector) {
             case "console":
                 logger.info("Starting ADS consumer with console connector.");
                 eventHandler = new Console();
                 break;
             case "postgres":
+                logger.info("Running DB Migration if needed.");
+                Flyway flyway = new Flyway();
+                flyway.setDataSource(dotenv.get("FLYWAY_URL"), null, null);
+    
+                try {
+                    flyway.migrate();
+                } catch (Exception e) {
+                    logger.error("Unable to run Migration: " + e);
+                }
+
                 logger.info("Starting ADS consumer with postgres connector.");
                 try {
                     eventHandler = new Postgres(dotenv.get("FLYWAY_URL"));
                 } catch (SQLException e) {
                     logger.error(e.getMessage());
                 }
+                break;
+            case "kinesis":
+                logger.info("Starting ADS consumer with kinesis connector.");
+                BasicAWSCredentials awsCreds = new BasicAWSCredentials(
+                    dotenv.get("AWS_ACCESS_KEY_ID"), 
+                    dotenv.get("AWS_SECRET_ACCESS_KEY"));
+                eventHandler = new Kinesis(
+                    dotenv.get("AWS_REGION"), 
+                    dotenv.get("AWS_STREAM_NAME"),
+                    awsCreds);
                 break;
             case "default":
                 logger.info("Starting ADS consumer with default connector.");
