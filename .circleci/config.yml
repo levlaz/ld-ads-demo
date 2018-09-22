@@ -5,5 +5,4 @@ orbs:
 workflows:
   test:
     jobs:
-      - maven/test:
-          debug: true
+      - maven/test
