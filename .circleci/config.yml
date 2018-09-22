@@ -5,5 +5,5 @@ orbs:
 workflows:
   test:
     jobs:
-      - maven/test:
-          command: integration-test
+      - maven/test
+          # command: integration-test
