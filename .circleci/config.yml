@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  maven: levlaz/maven@volatile
+  maven: levlaz/maven@dev:volatile
 
 workflows:
   test:
