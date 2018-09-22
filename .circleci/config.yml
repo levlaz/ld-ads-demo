@@ -6,4 +6,3 @@ workflows:
   test:
     jobs:
       - maven/test
-      - maven/debug
