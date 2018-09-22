@@ -4,5 +4,8 @@ orbs:
 
 workflows:
   test:
+    executor:
+      name: openjdk
+      tag: "10-jdk-node"
     jobs:
       - maven/test
