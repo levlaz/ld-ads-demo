@@ -6,4 +6,4 @@ workflows:
   test:
     jobs:
       - maven/test
-          # command: integration-test
+      - maven/debug
