@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  maven: circleci/maven@volatile
+  maven: levlaz/maven@volatile
 
 workflows:
   test:
