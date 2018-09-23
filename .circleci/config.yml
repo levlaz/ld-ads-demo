@@ -7,3 +7,4 @@ workflows:
     jobs:
       - maven/test:
           command: -X verify
+          path: target/surefire-reports
