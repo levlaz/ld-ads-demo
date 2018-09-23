@@ -5,6 +5,4 @@ orbs:
 workflows:
   test:
     jobs:
-      - maven/test:
-          command: -X verify
-          test_results_path: target/surefire-reports
+      - maven/test
