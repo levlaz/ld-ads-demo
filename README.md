@@ -47,5 +47,5 @@ as a string argument.
 The supported connectors right now are: 
 
 * `console` - pretty print to console
-* `postgres` - write summary and index events to postgresql 
-
+* `postgres` - write events to PostgreSQL
+* `mysql` - write events to MySQL
