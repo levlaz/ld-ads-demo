@@ -7,8 +7,10 @@ import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.EventSource;
 
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.levlaz.adsdemo.connectors.Console;
 import org.levlaz.adsdemo.connectors.Postgres;
+import org.levlaz.adsdemo.connectors.MySQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,25 +32,34 @@ public class App implements Runnable {
     private static final Logger logger =
         LoggerFactory.getLogger(App.class.getName());
 
+    private void runMigrations(String databaseType, String flywayUrl) {
+        FluentConfiguration configuration = new FluentConfiguration();
+        configuration.dataSource(flywayUrl, null, null);
+
+        if (databaseType == "mysql") {
+            configuration.locations("db/migration/mysql");
+        } else if (databaseType == "postgres") {
+            configuration.locations("db/migration/postgres");
+        } else {
+            logger.error("Unkown Database Type");
+            System.exit(1);
+        }
+        
+        Flyway flyway = new Flyway(configuration);
+
+        try {
+            flyway.migrate();
+        } catch (Exception e) {
+            logger.error("Unable to run migration: " + e);
+        }
+    }
+
     public void run() {
         EventHandler eventHandler = null;
         Dotenv dotenv = Dotenv.configure()
             .directory("./")
             .ignoreIfMissing()
             .load();
-
-        if ((dotenv.get("FLYWAY_URL") == null ) || (dotenv.get("FLYWAY_URL").length() == 0))  {
-            logger.warn("FLYWAY_URL not set, not running migrations");
-        } else {
-            Flyway flyway = new Flyway();
-            flyway.setDataSource(dotenv.get("FLYWAY_URL"), null, null);
-
-            try {
-                flyway.migrate();
-            } catch (Exception e) {
-                logger.error("Unable to run Migration: " + e);
-            }
-        }
 
         switch (connector) {
             case "console":
@@ -58,7 +69,17 @@ public class App implements Runnable {
             case "postgres":
                 logger.info("Starting ADS consumer with postgres connector.");
                 try {
+                    runMigrations("postgres", dotenv.get("FLYWAY_URL"));
                     eventHandler = new Postgres(dotenv.get("FLYWAY_URL"));
+                } catch (SQLException e) {
+                    logger.error(e.getMessage());
+                }
+                break;
+            case "mysql":
+                logger.info("Starting ADS consumer with MySQL connector.");
+                try {
+                    runMigrations("mysql", dotenv.get("FLYWAY_URL"));
+                    eventHandler = new MySQL(dotenv.get("FLYWAY_URL"));
                 } catch (SQLException e) {
                     logger.error(e.getMessage());
                 }
